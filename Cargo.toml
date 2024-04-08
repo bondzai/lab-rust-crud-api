@@ -1,0 +1,6 @@
+[package]
+name = "lab"
+version = "0.1.0"
+authors = ["JamesBond <introbond.dev@gmail.com>"]
+
+[dependencies]
