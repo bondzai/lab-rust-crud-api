@@ -19,7 +19,7 @@ impl TodoRepository for TodoRepositoryImpl {
     fn new() -> Self {
         TodoRepositoryImpl {
             todos: HashMap::new(),
-            counter: 0,
+            counter: 1, // Start counting from 1
         }
     }
 
