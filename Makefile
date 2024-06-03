@@ -20,3 +20,7 @@ $(TARGET): src/*.rs
 
 clean:
 	$(CARGO) clean
+
+run:
+	@cargo build
+	@cargo run
