@@ -1,13 +1,18 @@
 use actix_web::{web, App, HttpServer};
+use std::sync::{Arc, Mutex};
+
 mod models;
 mod handlers;
-mod services;
 mod repositories;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    let repository = Arc::new(Mutex::new(repositories::TodoRepositoryImpl::new()));
+    let shared_data = web::Data::new(repository);
+
+    HttpServer::new(move || {
         App::new()
+            .app_data(shared_data.clone())
             .service(
                 web::scope("/todos")
                     .route("", web::post().to(handlers::create_todo))

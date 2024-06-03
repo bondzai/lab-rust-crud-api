@@ -1,53 +1,45 @@
 use std::collections::HashMap;
 use crate::models::Todo;
 
-pub trait TodoRepository {
-    fn new() -> Self;
-    fn create(&mut self, todo: Todo) -> Todo;
-    fn get_all(&self) -> Vec<Todo>;
-    fn get(&self, id: usize) -> Option<Todo>;
-    fn update(&mut self, id: usize, todo: Todo) -> Option<Todo>;
-    fn delete(&mut self, id: usize) -> bool;
-}
-
 pub struct TodoRepositoryImpl {
     todos: HashMap<usize, Todo>,
     counter: usize,
 }
 
-impl TodoRepository for TodoRepositoryImpl {
-    fn new() -> Self {
+impl TodoRepositoryImpl {
+    pub fn new() -> Self {
         TodoRepositoryImpl {
             todos: HashMap::new(),
-            counter: 1, // Start counting from 1
+            counter: 1,
         }
     }
 
-    fn create(&mut self, mut todo: Todo) -> Todo {
+    pub fn create(&mut self, mut todo: Todo) -> Todo {
         todo.id = self.counter;
         self.counter += 1;
         self.todos.insert(todo.id, todo.clone());
         todo
     }
 
-    fn get_all(&self) -> Vec<Todo> {
+    pub fn get_all(&self) -> Vec<Todo> {
         self.todos.values().cloned().collect()
     }
 
-    fn get(&self, id: usize) -> Option<Todo> {
+    pub fn get(&self, id: usize) -> Option<Todo> {
         self.todos.get(&id).cloned()
     }
 
-    fn update(&mut self, id: usize, todo: Todo) -> Option<Todo> {
-        if let Some(_) = self.todos.get(&id) {
-            self.todos.insert(id, todo.clone());
-            Some(todo)
+    pub fn update(&mut self, id: usize, todo: Todo) -> Option<Todo> {
+        if let Some(existing_todo) = self.todos.get_mut(&id) {
+            existing_todo.title = todo.title;
+            existing_todo.completed = todo.completed;
+            Some(existing_todo.clone())
         } else {
             None
         }
     }
 
-    fn delete(&mut self, id: usize) -> bool {
+    pub fn delete(&mut self, id: usize) -> bool {
         self.todos.remove(&id).is_some()
     }
 }
