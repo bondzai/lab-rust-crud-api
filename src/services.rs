@@ -1,44 +1,38 @@
 use crate::models::Todo;
-use crate::repositories::{TodoRepository, TodoRepositoryImpl};
+use crate::repositories::TodoRepositoryImpl;
+use std::sync::{Arc, Mutex};
 
-pub trait TodoService {
-    fn new() -> Self;
-    fn create_todo(&mut self, todo: Todo) -> Todo;
-    fn get_all_todos(&self) -> Vec<Todo>;
-    fn get_todo(&self, id: usize) -> Option<Todo>;
-    fn update_todo(&mut self, id: usize, todo: Todo) -> Option<Todo>;
-    fn delete_todo(&mut self, id: usize) -> bool;
+pub struct TodoServiceImpl {
+    repository: Arc<Mutex<TodoRepositoryImpl>>,
 }
 
-pub struct TodoServiceImpl;
-
-impl TodoService for TodoServiceImpl {
-    fn new() -> Self {
-        TodoServiceImpl
+impl TodoServiceImpl {
+    pub fn new(repo: Arc<Mutex<TodoRepositoryImpl>>) -> Self {
+        TodoServiceImpl { repository: repo }
     }
 
-    fn create_todo(&mut self, todo: Todo) -> Todo {
-        let mut repository = TodoRepositoryImpl::new();
-        repository.create(todo)
+    pub fn create_todo(&self, todo: Todo) -> Todo {
+        let mut repo = self.repository.lock().unwrap();
+        repo.create(todo)
     }
 
-    fn get_all_todos(&self) -> Vec<Todo> {
-        let repository = TodoRepositoryImpl::new();
-        repository.get_all()
+    pub fn get_all_todos(&self) -> Vec<Todo> {
+        let repo = self.repository.lock().unwrap();
+        repo.get_all()
     }
 
-    fn get_todo(&self, id: usize) -> Option<Todo> {
-        let repository = TodoRepositoryImpl::new();
-        repository.get(id)
+    pub fn get_todo(&self, id: usize) -> Option<Todo> {
+        let repo = self.repository.lock().unwrap();
+        repo.get(id)
     }
 
-    fn update_todo(&mut self, id: usize, todo: Todo) -> Option<Todo> {
-        let mut repository = TodoRepositoryImpl::new();
-        repository.update(id, todo)
+    pub fn update_todo(&self, id: usize, todo: Todo) -> Option<Todo> {
+        let mut repo = self.repository.lock().unwrap();
+        repo.update(id, todo)
     }
 
-    fn delete_todo(&mut self, id: usize) -> bool {
-        let mut repository = TodoRepositoryImpl::new();
-        repository.delete(id)
+    pub fn delete_todo(&self, id: usize) -> bool {
+        let mut repo = self.repository.lock().unwrap();
+        repo.delete(id)
     }
 }
