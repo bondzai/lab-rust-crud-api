@@ -24,7 +24,7 @@ async fn main() -> std::io::Result<()> {
                     .route("/{id}", web::delete().to(handlers::delete_todo)),
             )
     })
-    .bind("0.0.0.0:8080")?
+    .bind("0.0.0.0:10000")?
     .run()
     .await
 }
