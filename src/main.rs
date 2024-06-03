@@ -16,7 +16,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(shared_service.clone())
             .service(
-                web::scope("/todos")
+                web::scope("/todo")
                     .route("", web::post().to(handlers::create_todo))
                     .route("", web::get().to(handlers::get_all_todos))
                     .route("/{id}", web::get().to(handlers::get_todo))
